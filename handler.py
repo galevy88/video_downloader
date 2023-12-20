@@ -12,7 +12,6 @@ app = Flask(__name__)
 
 def download_video_task(video_url, dir_path, result_queue):
     try:
-        time.sleep(25)
         video_file_path = download_social_video(video_url, 'DownloadedVideo', dir_path)
         if video_file_path:
             with open(video_file_path, 'rb') as video_file:
