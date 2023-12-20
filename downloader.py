@@ -6,12 +6,12 @@ def download_social_video(video_url, filename, dir_path):
     querystring = {"url": video_url, "filename": filename}
 
     headers = {
-        "X-RapidAPI-Key": "XXXXXXXX",
+        "X-RapidAPI-Key": "536d405d53mshebfc39ec9e2c5c7p1e8489jsna23d14919022",
         "X-RapidAPI-Host": "fb-video-reels.p.rapidapi.com"
     }
-
+    print(f"video_url {video_url}")
     response = requests.get(api_url, headers=headers, params=querystring)
-
+    print(response.json())
     if response.status_code == 200:
         # Parse the JSON response
         response_json = response.json()
@@ -46,7 +46,7 @@ def download_social_video(video_url, filename, dir_path):
                     return None
             else:
                 print("No suitable video links found in the response")
-                return None
+                return "TIMEOUT"
         else:
             print("No video links found in the response")
             return None
