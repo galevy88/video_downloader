@@ -3,7 +3,7 @@ import base64
 
 def get_video_data(video_url):
     # The API endpoint you are requesting data from
-    api_url = "http://3.238.98.134:3001//download_video"
+    api_url = "http://3.238.98.134:3001/download_video"
 
     # Parameters to be sent with the request
     params = {'video_url': video_url}
@@ -30,6 +30,6 @@ def get_video_data(video_url):
         return f"Error: {response.status_code}"
 
 # Example usage
-video_url = "https://www.facebook.com/LADbibleAustralia/videos/386779267026839/?extid=CL-UNK-UNK-UNK-AN_GK0T-GK1C&mibextid=Nif5oz"
+video_url = "https://www.instagram.com/reel/C0YXY2DI9fW/?igshid=MzRlODBiNWFlZA%3D%3D"
 result = get_video_data(video_url)
 print(result)

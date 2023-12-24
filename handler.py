@@ -1,16 +1,22 @@
-from flask import Flask, request, jsonify
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Response
+from pydantic import BaseModel
 import os
 import datetime
 import shutil
 import base64
+from downloader import download_social_video
+import uuid
 import threading
 import queue
-from downloader import download_social_video
-import time
 
-app = Flask(__name__)
+app = FastAPI()
 
-def download_video_task(video_url, dir_path, result_queue):
+class VideoDownloadResult(BaseModel):
+    message: str = None
+    video_base64: str = None
+    error: str = None
+
+def download_video_task(video_url: str, dir_path: str, result_queue: queue.Queue):
     try:
         video_file_path = download_social_video(video_url, 'DownloadedVideo', dir_path)
         if video_file_path:
@@ -18,21 +24,21 @@ def download_video_task(video_url, dir_path, result_queue):
                 video_base64 = base64.b64encode(video_file.read()).decode('utf-8')
             result = {"message": "Video downloaded successfully", "video_base64": video_base64}
         else:
-            result = {"error": "Video download failed"}, 500
+            result = {"error": "Video download failed"}
     except Exception as e:
-        result = {"error": f"Failed to encode video: {e}"}, 500
+        result = {"error": f"Failed to encode video: {e}"}
     finally:
         if os.path.exists(dir_path):
             shutil.rmtree(dir_path)
         result_queue.put(result)
 
-@app.route('/download_video', methods=['GET'])
-def handle_video_download():
-    video_url = request.args.get('video_url')
+@app.get("/download_video")
+def handle_video_download(video_url: str, background_tasks: BackgroundTasks, response: Response):
     if not video_url:
-        return jsonify({"error": "No video URL provided"}), 400
+        response.status_code = 400
+        return {"error": "No video URL provided"}
 
-    iat = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    iat = str(uuid.uuid4())
     base_path = os.getcwd()
     dir_path = os.path.join(base_path, f'{iat}')
 
@@ -45,9 +51,13 @@ def handle_video_download():
 
     try:
         result = result_queue.get(timeout=20)
-        return jsonify(result)
+        if "error" in result:
+            response.status_code = 500
+        return result
     except queue.Empty:
-        return jsonify({"error": "TIMEOUT"}), 408
+        response.status_code = 408
+        return {"error": "TIMEOUT"}
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=3001, debug=True)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=3001)

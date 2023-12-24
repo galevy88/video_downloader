@@ -6,7 +6,7 @@ def download_social_video(video_url, filename, dir_path):
     querystring = {"url": video_url, "filename": filename}
 
     headers = {
-        "X-RapidAPI-Key": "536d405d53mshebfc39ec9e2c5c7p1e8489jsna23d14919022",
+        "X-RapidAPI-Key": "XXXX",
         "X-RapidAPI-Host": "fb-video-reels.p.rapidapi.com"
     }
     print(f"video_url {video_url}")
