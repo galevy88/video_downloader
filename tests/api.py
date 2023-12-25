@@ -3,7 +3,7 @@ import base64
 
 def get_video_data(video_url):
     # The API endpoint you are requesting data from
-    api_url = "http://3.238.98.134:3001/download_video"
+    api_url = "http://54.87.33.112:3001/download_video"
 
     # Parameters to be sent with the request
     params = {'video_url': video_url}
