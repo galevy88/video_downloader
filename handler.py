@@ -11,7 +11,11 @@ import queue
 import logging
 from dotenv import load_dotenv
 from cloudwatch_logger import CloudWatchLogger as logger
+import argparse
 
+parser = argparse.ArgumentParser(description='Run FastAPI server.')
+parser.add_argument('--port', type=int, default=3001, help='Port to run the server on')
+args = parser.parse_args()
 load_dotenv()
 
 app = FastAPI()
@@ -74,4 +78,4 @@ def handle_video_download(video_url: str, background_tasks: BackgroundTasks, res
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=3001)
+    uvicorn.run(app, host="0.0.0.0", port=args.port)
