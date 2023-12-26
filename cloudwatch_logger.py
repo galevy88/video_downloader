@@ -3,6 +3,7 @@ import boto3
 import logging
 import time
 import json
+import traceback
 import psutil
 import inspect
 from datetime import datetime
@@ -36,7 +37,25 @@ class CloudWatchLogger:
     logger.addHandler(console_handler)
 
     @staticmethod
+    def format_exception(e):
+        """
+        Format the exception to include the full stack trace.
+        """
+        return ''.join(traceback.format_exception(None, e, e.__traceback__))
+
+    @staticmethod
     def log(message, level=logging.INFO):
+        if isinstance(message, Exception):
+            # Format the exception with its traceback
+            message = CloudWatchLogger.format_exception(message)
+            level = logging.ERROR
+        elif isinstance(message, str) and message.startswith("Exception occurred:"):
+            # If the message is a string indicating an exception, format it with traceback
+            try:
+                raise Exception(message)
+            except Exception as e:
+                message = CloudWatchLogger.format_exception(e)
+
         # Generate log stream name based on the current date
         current_date = datetime.now().strftime("%Y-%m-%d")
         log_stream = f"{current_date}"
@@ -94,8 +113,8 @@ class CloudWatchLogger:
             )
             CloudWatchLogger.sequence_token = response['nextSequenceToken']
         except Exception as e:
-            # Handle any other exceptions
-            CloudWatchLogger.logger.error(f"An error occurred: {e}")
+            formatted_exception = CloudWatchLogger.format_exception(e)
+            CloudWatchLogger.logger.error(formatted_exception)
 
     @staticmethod
     def ensure_log_stream_exists(log_stream):
@@ -110,4 +129,7 @@ class CloudWatchLogger:
 
 # Example usage
 if __name__ == "__main__":
-    CloudWatchLogger.log("Test message to log and send to CloudWatch")
+    try:
+        CloudWatchLogger.log("Test message to log and send to CloudWatch")
+    except Exception as e:
+        CloudWatchLogger.log(e)
