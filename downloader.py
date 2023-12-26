@@ -3,11 +3,12 @@ import os
 from dotenv import load_dotenv
 from cloudwatch_logger import CloudWatchLogger as logger
 import logging
-
+from aws_secrets import get_secret
 load_dotenv()
 
+api_key = get_secret('prod_fb_video_reels')
 def download_social_video(video_url, filename, dir_path):
-    api_key = os.getenv('RAPID_API_KEY')
+
     api_url = "https://fb-video-reels.p.rapidapi.com/api/getSocialVideo"
     querystring = {"url": video_url, "filename": filename}
 
@@ -17,7 +18,7 @@ def download_social_video(video_url, filename, dir_path):
     }
 
     logger.log(f"Attempting to download video from URL: {video_url}")
-    response = requests.get(api_url, headers=headers, params=querystring)
+    response = requests.get(api_url, headers=headers, params=querystring, verify=False)
 
     if response.status_code == 200:
         response_json = response.json()

@@ -12,4 +12,4 @@ def get_secret(secret_name):
     else:
         if 'SecretString' in get_secret_value_response:
             secret = get_secret_value_response['SecretString']
-            return json.loads(secret)
+            return str(secret)
