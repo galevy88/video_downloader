@@ -12,4 +12,4 @@ if __name__ == "__main__":
         function_that_raises_exception()
     except Exception as e:
         # Log the exception using CloudWatchLogger
-        logger.log(e)
+        logger.log(e, '12345')
