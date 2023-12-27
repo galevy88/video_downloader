@@ -45,6 +45,9 @@ def download_video_task(video_url: str, dir_path: str, result_queue: queue.Queue
             shutil.rmtree(dir_path)
         result_queue.put(result)
 
+@app.get("/health")
+def is_up():
+    return {"status": "UP"}
 @app.get("/download_video")
 def handle_video_download(video_url: str, response: Response):
     uid = str(uuid.uuid4())
