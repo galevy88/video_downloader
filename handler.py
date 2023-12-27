@@ -25,6 +25,10 @@ class VideoDownloadResult(BaseModel):
     video_base64: str = None
     error: str = None
 
+class VideoDownloadRequest(BaseModel):
+    video_url: str
+    uid: str
+
 def download_video_task(video_url: str, dir_path: str, result_queue: queue.Queue, uid: str):
     try:
         logger.log(f"Starting download for URL: {video_url}", uid=uid)
@@ -48,9 +52,11 @@ def download_video_task(video_url: str, dir_path: str, result_queue: queue.Queue
 @app.get("/health")
 def is_up():
     return {"status": "UP"}
-@app.get("/download_video")
-def handle_video_download(video_url: str, response: Response):
-    uid = str(uuid.uuid4())
+@app.post("/download_video")
+def handle_video_download(request_body: VideoDownloadRequest, response: Response):
+    video_url = request_body.video_url
+    uid = request_body.uid
+
     try:
         if not video_url:
             logger.log(f"No video URL provided in the request. video_url is {video_url}", level=logging.ERROR, uid=uid)

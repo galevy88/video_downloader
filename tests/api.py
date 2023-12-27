@@ -1,15 +1,19 @@
 import requests
 import base64
+import uuid
 
 def get_video_data(video_url):
     # The API endpoint you are requesting data from
     api_url = "http://127.0.0.1:3001/download_video"
 
-    # Parameters to be sent with the request
-    params = {'video_url': video_url}
+    # Data to be sent in the request body
+    data = {
+        'video_url': video_url,
+        'uid': str(uuid.uuid4())  # Generate a unique identifier
+    }
 
-    # Perform the GET request
-    response = requests.get(api_url, params=params)
+    # Perform the POST request
+    response = requests.post(api_url, json=data)
 
     # Check if the request was successful
     if response.status_code == 200:
