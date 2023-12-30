@@ -52,7 +52,7 @@ def download_video_task(video_url: str, dir_path: str, result_queue: queue.Queue
 @app.get("/health")
 def is_up():
     return {"status": "UP"}
-@app.post("/download_video")
+@app.put("/download_video")
 def handle_video_download(request_body: VideoDownloadRequest, response: Response):
     video_url = request_body.video_url
     uid = request_body.uid
