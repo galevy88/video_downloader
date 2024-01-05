@@ -89,4 +89,4 @@ def handle_video_download(request_body: VideoDownloadRequest, response: Response
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=args.port)
+    uvicorn.run(app, host="0.0.0.0", port=args.port)
