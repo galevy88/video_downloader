@@ -4,7 +4,7 @@ import uuid
 
 def get_video_data(video_url):
     # The API endpoint you are requesting data from
-    api_url = "http://127.0.0.1:3001/download_video"
+    api_url = "http://127.0.0.1:3004/download_video"
 
     # Data to be sent in the request body
     data = {
@@ -13,7 +13,7 @@ def get_video_data(video_url):
     }
 
     # Perform the POST request
-    response = requests.post(api_url, json=data)
+    response = requests.put(api_url, json=data, verify=False)
 
     # Check if the request was successful
     if response.status_code == 200:
@@ -34,6 +34,6 @@ def get_video_data(video_url):
         return f"Error: {response.status_code}"
 
 # Example usage
-video_url = "https://www.instagram.com/reel/C0YXY2DI9fW/?igshid=MzRlODBiNWFlZA%3D%3D"
+video_url = "https://www.youtube.com/shorts/Wuxq3fVoAig"
 result = get_video_data(video_url)
 print(result)
