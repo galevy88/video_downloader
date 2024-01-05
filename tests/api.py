@@ -29,7 +29,7 @@ def get_video_data(video_url):
 
             return f"Video saved successfully as {video_file_path}"
         else:
-            return "No video data found in response"
+            return "No video data found in response."
     else:
         return f"Error: {response.status_code}"
 
