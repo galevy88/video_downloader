@@ -32,7 +32,7 @@ class VideoDownloadRequest(BaseModel):
 def download_video_task(video_url: str, dir_path: str, result_queue: queue.Queue, uid: str):
     try:
         logger.log(f"Starting download for URL: {video_url}", uid=uid)
-        video_file_path = download_social_video(video_url, 'DownloadedVideo', dir_path, uid)
+        video_file_path = download_social_video(video_url, dir_path, uid)
         if video_file_path:
             with open(video_file_path, 'rb') as video_file:
                 video_base64 = base64.b64encode(video_file.read()).decode('utf-8')
