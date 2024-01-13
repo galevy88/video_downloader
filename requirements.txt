@@ -1,0 +1,7 @@
+requests==2.31.0
+pydantic
+python-dotenv
+fastapi==0.105.0
+boto3
+psutil
+uvicorn==0.25.0
